@@ -9,6 +9,6 @@ class AirportViewSet(ModelViewSet):
     serializer_class = AirportSerializer
 
 
-class AirportViewSet(ModelViewSet):
+class CrewViewSet(ModelViewSet):
     queryset = Crew.objects.all()
     serializer_class = CrewSerializer
