@@ -1,3 +1,8 @@
-from django.shortcuts import render
+from rest_framework.viewsets import ModelViewSet
 
-# Create your views here.
+from airport.models import Airport
+
+
+# class AirportViewSet(ModelViewSet):
+#     queryset = Airport.objects.all()
+#     serializer_class =
