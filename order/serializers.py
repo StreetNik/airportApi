@@ -6,7 +6,7 @@ from order.models import Order, Ticket
 class OrderSerializer(serializers.ModelSerializer):
     user = serializers.SlugRelatedField(
         many=False,
-        read_only=False,
+        read_only=True,
         slug_field="username"
     )
 
@@ -16,6 +16,8 @@ class OrderSerializer(serializers.ModelSerializer):
 
 
 class TicketSerializer(serializers.ModelSerializer):
+    owner_name = serializers.CharField(source="get_owner_name", read_only=True)
+
     class Meta:
         model = Ticket
-        fields = ["id", "row", "seat", "flight", "order"]
+        fields = ["id", "row", "seat", "flight", "order", "owner_name"]
