@@ -6,7 +6,7 @@ from flight.models import Flight
 
 
 class Order(models.Model):
-    created_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
 
     class Meta:
@@ -26,6 +26,9 @@ class Ticket(models.Model):
         ordering = ("order",)
         unique_together = ("row", "seat", "flight")
 
+    def get_owner_name(self):
+        return f"{self.order.user.first_name} {self.order.user.last_name}"
+
     def clean(self):
         if self.row < 1 or self.row > self.flight.airplane.rows:
             raise ValidationError("Row number is not within the valid range for this plane.")
@@ -33,4 +36,4 @@ class Ticket(models.Model):
             raise ValidationError("Seat number is not within the valid range for this plane.")
 
     def __str__(self):
-        return self.flight
+        return f"Ticket {self.id} - Row: {self.row}, Seat: {self.seat}, Flight: {self.flight}"
