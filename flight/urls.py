@@ -1,11 +1,11 @@
 from rest_framework import routers
 
-from airport.views import AirportViewSet, CrewViewSet
+from flight.views import FlightViewSet, RouteViewSet
 
 router = routers.DefaultRouter()
 
-router.register(r"flight-list", AirportViewSet, basename="airport-detail")
-router.register(r"route-list", CrewViewSet, basename="crew-detail")
+router.register(r"flight-list", FlightViewSet, basename="airport-detail")
+router.register(r"route-list", RouteViewSet, basename="crew-detail")
 
 urlpatterns = [] + router.urls
 
