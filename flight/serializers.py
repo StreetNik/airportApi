@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from flight.models import Route, Flight
+from order.models import Ticket
 
 
 class RouteSerializer(serializers.ModelSerializer):
@@ -20,7 +21,16 @@ class RouteSerializer(serializers.ModelSerializer):
         return obj.destination.name
 
 
+class TicketSeatsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ticket
+        fields = ("row", "seat",)
+
+
 class FlightSerializer(serializers.ModelSerializer):
+    capacity = serializers.IntegerField(read_only=True, source="airplane.capacity")
+    taken_seats = TicketSeatsSerializer(many=True, source="tickets", read_only=True)
+
     class Meta:
         model = Flight
-        fields = ("route", "airplane", "departure_time", "arrival_time")
+        fields = ("route", "airplane", "departure_time", "arrival_time", "capacity", "taken_seats")
