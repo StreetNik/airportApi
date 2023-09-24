@@ -43,7 +43,6 @@ class FlightSerializer(serializers.ModelSerializer):
             "departure_time", "arrival_time", "capacity",
             "taken_seats", "route", "airplane"
         )
-        read_only_fields = ("route_name", "airplane_name")
         extra_kwargs = {
             "route": {"write_only": True},
             "airplane": {"write_only": True}
