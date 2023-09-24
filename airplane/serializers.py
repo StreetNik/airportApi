@@ -6,7 +6,7 @@ from airplane.models import Airplane, AirplaneType
 class AirplaneTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = AirplaneType
-        fields = ["name"]
+        fields = ["id", "name"]
 
 
 class AirplaneSerializer(serializers.ModelSerializer):
