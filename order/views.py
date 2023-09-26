@@ -10,7 +10,6 @@ from rest_framework.permissions import IsAuthenticated
 
 class OrderViewSet(
     mixins.ListModelMixin,
-    mixins.CreateModelMixin,
     GenericViewSet,
 ):
     serializer_class = OrderSerializer
@@ -25,7 +24,7 @@ class OrderViewSet(
 
         queryset = Order.objects.all().select_related("user").prefetch_related(
             "tickets__flight__route__source",
-            "tickets__flight__route__destination"
+            "tickets__flight__route__destination",
         )
 
         if not user.is_superuser:
