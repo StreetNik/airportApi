@@ -15,7 +15,7 @@ class AirplaneViewSet(ModelViewSet):
         name = self.request.query_params.get("name")
         type = self.request.query_params.get("type")
 
-        queryset = Airplane.objects.all()
+        queryset = Airplane.objects.all().select_related("airplane_type")
 
         if name:
             queryset = queryset.filter(name__icontains=name)

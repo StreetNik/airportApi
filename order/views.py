@@ -1,8 +1,9 @@
 from rest_framework.viewsets import GenericViewSet
 from rest_framework import mixins
+from django.contrib.auth.models import User
 
-from order.models import Order, Ticket
-from order.serializers import OrderSerializer, TicketSerializer, OrderListSerializer
+from order.models import Order
+from order.serializers import OrderSerializer, OrderListSerializer
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
 
@@ -18,10 +19,14 @@ class OrderViewSet(
 
     def get_queryset(self):
         user = self.request.user
+        username = self.request.query_params.get("username")
         date_range_start = self.request.query_params.get("date_range_start")
         date_range_end = self.request.query_params.get("date_range_end")
 
-        queryset = Order.objects.all()
+        queryset = Order.objects.all().select_related("user").prefetch_related(
+            "tickets__flight__route__source",
+            "tickets__flight__route__destination"
+        )
 
         if not user.is_superuser:
             queryset = queryset.filter(user=user)
@@ -30,6 +35,9 @@ class OrderViewSet(
             queryset = queryset.filter(created_at__gt=date_range_start)
         if date_range_end:
             queryset = queryset.filter(created_at__lt=date_range_end)
+        if username:
+            user = User.objects.get(username=username)
+            queryset = queryset.filter(user=user)
 
         return queryset
 
