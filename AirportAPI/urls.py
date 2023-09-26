@@ -23,5 +23,6 @@ urlpatterns = [
     path("api/airport/", include("airport.urls")),
     path("api/airplane/", include("airplane.urls")),
     path("api/flight/", include("flight.urls")),
-    path("api/order/", include("order.urls"))
+    path("api/order/", include("order.urls")),
+    path("__debug__/", include("debug_toolbar.urls")),
 ]
