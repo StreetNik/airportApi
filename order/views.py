@@ -22,7 +22,7 @@ class OrderViewSet(
         date_range_start = self.request.query_params.get("date_range_start")
         date_range_end = self.request.query_params.get("date_range_end")
 
-        queryset = Order.objects.all().select_related("user").prefetch_related(
+        queryset = Order.objects.select_related("user").prefetch_related(
             "tickets__flight__route__source",
             "tickets__flight__route__destination",
         )

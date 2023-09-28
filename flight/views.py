@@ -17,8 +17,11 @@ class FlightViewSet(ModelViewSet):
         date_range_start = self.request.query_params.get("date_range_start")
         date_range_end = self.request.query_params.get("date_range_end")
 
-        queryset = Flight.objects.all().select_related("route__source", "route__destination", "airplane")
-        queryset = queryset.prefetch_related("tickets")
+        queryset = Flight.objects.select_related(
+            "route__source",
+            "route__destination",
+            "airplane"
+        ).prefetch_related("tickets")
 
         if source:
             queryset = queryset.filter(route__source__name__icontains=source)
