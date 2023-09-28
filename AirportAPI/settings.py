@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "flight",
     "order",
     "debug_toolbar",
+    "drf_spectacular"
 ]
 
 MIDDLEWARE = [
@@ -139,7 +140,8 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REST_FRAMEWORK = {
-    "DEFAULT_PAGINATION_CLASS": "pagination.StandardResultsSetPagination"
+    "DEFAULT_PAGINATION_CLASS": "pagination.StandardResultsSetPagination",
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
 INTERNAL_IPS = [
@@ -147,3 +149,11 @@ INTERNAL_IPS = [
     "127.0.0.1",
     # ...
 ]
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Airport Api",
+    'DESCRIPTION': 'Documentation for Airport API',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    # OTHER SETTINGS
+}

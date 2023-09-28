@@ -1,5 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.response import Response
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 
 from AirportAPI.permissions import IsSuperuserOrReadOnly
 from airplane.models import Airplane, AirplaneType
@@ -24,6 +26,25 @@ class AirplaneViewSet(ModelViewSet):
 
         return queryset.distinct()
 
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="name",
+                description="Filter airplanes by name",
+                required=False, type=str
+            ),
+            OpenApiParameter(
+                name="type",
+                description="Filter airplanes by airplanes type name",
+                required=False,
+                type=str
+            )
+        ]
+    )
+    def list(self, request, *args, **kwargs) -> Response:
+        """List of airplanes with filtering by name and type"""
+        return super().list(self, request, *args, **kwargs)
+
 
 class AirplaneTypeViewSet(ModelViewSet):
     serializer_class = AirplaneTypeSerializer
@@ -39,4 +60,18 @@ class AirplaneTypeViewSet(ModelViewSet):
             queryset = queryset.filter(name=name)
 
         return queryset
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="name",
+                description="Filter airplane types by name",
+                required=False,
+                type=str
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs) -> Response:
+        """List of airplane types with filtering by name"""
+        return super().list(self, request, *args, **kwargs)
 
