@@ -90,10 +90,10 @@ WSGI_APPLICATION = "AirportAPI.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "HOST": os.environ["DB_HOST"],
-        "NAME": os.environ["DB_NAME"],
-        "USER": os.environ["DB_USER"],
-        "PASSWORD": os.environ["DB_PASSWORD"]
+        "HOST": os.environ["POSTGRES_HOST"],
+        "NAME": os.environ["POSTGRES_DB"],
+        "USER": os.environ["POSTGRES_USER"],
+        "PASSWORD": os.environ["POSTGRES_PASSWORD"]
     }
 }
 
@@ -152,7 +152,7 @@ INTERNAL_IPS = [
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "Airport Api",
-    'DESCRIPTION': 'Documentation for Airport API',
+    'DESCRIPTION': 'Documentation for Airport_API',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
     # OTHER SETTINGS
