@@ -139,4 +139,6 @@ GitHub.sublime-settings
 
 .env
 
+*.xml
+
 Dockerfile
