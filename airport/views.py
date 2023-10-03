@@ -4,8 +4,8 @@ from rest_framework.response import Response
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 
 from AirportAPI.permissions import IsSuperuserOrReadOnly
-from airport.models import Airport, Crew
-from airport.serializers import AirportSerializer, CrewSerializer
+from airport.models import Airport, Crew, CrewOccupation
+from airport.serializers import AirportSerializer, CrewSerializer, CrewOccupationSerializer
 
 
 class AirportViewSet(ModelViewSet):
@@ -72,3 +72,11 @@ class CrewViewSet(ModelViewSet):
     def list(self, request, *args, **kwargs) -> Response:
         """List of crew members with filtering by first and last name"""
         return super().list(self, request, *args, **kwargs)
+
+
+class CrewOccupationViewSet(ModelViewSet):
+    serializer_class = CrewOccupationSerializer
+    permission_classes = (IsSuperuserOrReadOnly,)
+    authentication_classes = (JWTAuthentication,)
+
+    queryset = CrewOccupation.objects.all()

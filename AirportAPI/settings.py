@@ -11,10 +11,12 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
 from pathlib import Path
+
+from celery.schedules import crontab
 from dotenv import load_dotenv
 
 
-#Load .env file
+# Load .env file
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -49,7 +51,8 @@ INSTALLED_APPS = [
     "flight",
     "order",
     "debug_toolbar",
-    "drf_spectacular"
+    "drf_spectacular",
+    "django_celery_beat",
 ]
 
 MIDDLEWARE = [
@@ -93,7 +96,7 @@ DATABASES = {
         "HOST": os.environ["POSTGRES_HOST"],
         "NAME": os.environ["POSTGRES_DB"],
         "USER": os.environ["POSTGRES_USER"],
-        "PASSWORD": os.environ["POSTGRES_PASSWORD"]
+        "PASSWORD": os.environ["POSTGRES_PASSWORD"],
     }
 }
 
@@ -122,7 +125,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = os.environ["TIME_ZONE"]
 
 USE_I18N = True
 
@@ -152,8 +155,17 @@ INTERNAL_IPS = [
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "Airport Api",
-    'DESCRIPTION': 'Documentation for Airport_API',
-    'VERSION': '1.0.0',
-    'SERVE_INCLUDE_SCHEMA': False,
+    "DESCRIPTION": "Documentation for Airport_API",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
     # OTHER SETTINGS
+}
+
+CELERY_BROKER_URL = os.environ["CELERY_BROKER_URL"]
+CELERY_TIMEZONE = os.environ["TIME_ZONE"]
+CELERY_BEAT_SCHEDULE = {
+    "monthly_crew_exp_update": {
+        "task": "airport.tasks.monthly_crew_exp_update",
+        "schedule": crontab(day_of_month="1"),
+    }
 }
