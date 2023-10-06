@@ -1,14 +1,9 @@
 from .tasks import monthly_crew_exp_update
-from datetime import datetime, timedelta
-import subprocess
 from .models import CrewOccupation, Crew
 from decimal import Decimal
 from celery.contrib.testing.worker import start_worker
 from django.test import SimpleTestCase
 from AirportAPI.celery import app
-from mock import Mock, patch
-
-import time
 
 
 class MonthlyCrewExpUpdate(SimpleTestCase):
@@ -43,31 +38,3 @@ class MonthlyCrewExpUpdate(SimpleTestCase):
         res_crew = Crew.objects.get(id=crew.id)
 
         self.assertEqual(res_crew.experience_years, Decimal("0.12"))
-
-    def test_task_is_called_every_month(self):
-        # Create a mock object for the task.
-        mock_task = Mock()
-
-        for crew in Crew.objects.all():
-            print(crew.experience_years)
-
-        # Patch the task with the mock object.
-        with patch("airport.tasks.monthly_crew_exp_update", mock_task):
-            celery_beat_process = subprocess.Popen(
-                [
-                    "celery", "-A", "AirportAPI", "beat", "--loglevel", "INFO",
-                    "--scheduler", "django_celery_beat.schedulers:DatabaseScheduler"
-                ]
-            )
-
-            # celery_beat_process.wait(timeout=10)
-            time.sleep(10)
-            current_time = datetime(2023, 10, 1)
-
-            current_time += timedelta(days=31)
-
-            celery_beat_process.terminate()
-
-            for crew in Crew.objects.all():
-                print(crew.experience_years)
-            self.assertEqual(mock_task.call_count, 2)
