@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "drf_spectacular",
     "django_celery_beat",
+    "django_celery_results",
 ]
 
 MIDDLEWARE = [
@@ -162,10 +163,11 @@ SPECTACULAR_SETTINGS = {
 }
 
 CELERY_BROKER_URL = os.environ["CELERY_BROKER_URL"]
+CELERY_RESULT_BACKEND = "redis://localhost"
 CELERY_TIMEZONE = os.environ["TIME_ZONE"]
 CELERY_BEAT_SCHEDULE = {
     "monthly_crew_exp_update": {
         "task": "airport.tasks.monthly_crew_exp_update",
-        "schedule": crontab(day_of_month="1"),
+        "schedule": crontab(month_of_year="*", day_of_month="1"),
     }
 }
