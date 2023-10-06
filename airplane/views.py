@@ -1,0 +1,77 @@
+from rest_framework.viewsets import ModelViewSet
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.response import Response
+from drf_spectacular.utils import extend_schema, OpenApiParameter
+
+from AirportAPI.permissions import IsSuperuserOrReadOnly
+from airplane.models import Airplane, AirplaneType
+from airplane.serializers import AirplaneSerializer, AirplaneTypeSerializer
+
+
+class AirplaneViewSet(ModelViewSet):
+    serializer_class = AirplaneSerializer
+    permission_classes = (IsSuperuserOrReadOnly,)
+    authentication_classes = (JWTAuthentication,)
+
+    def get_queryset(self):
+        name = self.request.query_params.get("name")
+        type = self.request.query_params.get("type")
+
+        queryset = Airplane.objects.select_related("airplane_type")
+
+        if name:
+            queryset = queryset.filter(name__icontains=name)
+        if type:
+            queryset = queryset.filter(airplane_type__name=type)
+
+        return queryset.distinct()
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="name",
+                description="Filter airplanes by name",
+                required=False, type=str
+            ),
+            OpenApiParameter(
+                name="type",
+                description="Filter airplanes by airplanes type name",
+                required=False,
+                type=str
+            )
+        ]
+    )
+    def list(self, request, *args, **kwargs) -> Response:
+        """List of airplanes with filtering by name and type"""
+        return super().list(self, request, *args, **kwargs)
+
+
+class AirplaneTypeViewSet(ModelViewSet):
+    serializer_class = AirplaneTypeSerializer
+    permission_classes = (IsSuperuserOrReadOnly,)
+    authentication_classes = (JWTAuthentication,)
+
+    def get_queryset(self):
+        name = self.request.query_params.get("name")
+
+        queryset = AirplaneType.objects.all()
+
+        if name:
+            queryset = queryset.filter(name=name)
+
+        return queryset
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="name",
+                description="Filter airplane types by name",
+                required=False,
+                type=str
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs) -> Response:
+        """List of airplane types with filtering by name"""
+        return super().list(self, request, *args, **kwargs)
+
