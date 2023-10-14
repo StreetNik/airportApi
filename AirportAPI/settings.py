@@ -163,7 +163,7 @@ SPECTACULAR_SETTINGS = {
 }
 
 CELERY_BROKER_URL = os.environ["CELERY_BROKER_URL"]
-CELERY_RESULT_BACKEND = "redis://localhost"
+CELERY_RESULT_BACKEND = os.environ["CELERY_BROKER_URL"]
 CELERY_TIMEZONE = os.environ["TIME_ZONE"]
 CELERY_BEAT_SCHEDULE = {
     "monthly_crew_exp_update": {
